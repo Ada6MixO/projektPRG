@@ -1,0 +1,103 @@
+﻿<Window x:Class="DalsiDailyPlannerApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Denní Plánovač" Height="700" Width="900">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Levá část: Seznam úkolů -->
+        <StackPanel Grid.Column="0" Margin="10">
+            <TextBlock Text="Seznam úkolů" FontSize="20" FontWeight="Bold" Margin="0,0,0,10" />
+
+            <!-- Seznam úkolů s deadline -->
+            <ListView x:Name="TaskListView" BorderBrush="#ccc" BorderThickness="1" Margin="0,0,0,10">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Úkol" Width="200">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Task}" TextWrapping="Wrap" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Deadline" Width="150">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Deadline}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Stav" Width="100">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox IsChecked="{Binding IsCompleted}" Content="Hotovo" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+            <!-- Přidání nového úkolu -->
+            <Grid Margin="0,10,0,0">
+                <TextBox x:Name="NewTaskTextBox" Height="30" VerticalContentAlignment="Center" />
+                <!-- TextBlock jako placeholder -->
+                <TextBlock Text="Zadejte nový úkol..." Foreground="Gray" IsHitTestVisible="False" VerticalAlignment="Center" Margin="5,0,0,0">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Visible" />
+                            <Style.Triggers>
+                                <!-- Trigger pro zobrazení TextBlock, pokud je TextBox prázdný -->
+                                <DataTrigger Binding="{Binding Text.Length, ElementName=NewTaskTextBox}" Value="0">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                                <!-- Trigger pro skrytí TextBlock, pokud TextBox obsahuje text -->
+                                <DataTrigger Binding="{Binding Text.Length, ElementName=NewTaskTextBox}" Value="1">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
+
+            <!-- Deadline -->
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                <DatePicker x:Name="DeadlineDatePicker" Width="150" Margin="0,0,10,0" />
+                <TextBox x:Name="DeadlineTimeTextBox" Width="100" Height="30" VerticalContentAlignment="Center" />
+                <TextBlock Text="HH:mm" Foreground="Gray" IsHitTestVisible="False" VerticalAlignment="Center">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Visible" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text, ElementName=DeadlineTimeTextBox}" Value="">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </StackPanel>
+
+            <!-- Přidat úkol tlačítko -->
+            <Button Content="Přidat úkol" Width="120" Height="30" HorizontalAlignment="Left" Margin="0,10,0,0" />
+        </StackPanel>
+
+        <!-- Pravá část: Plán dne -->
+        <StackPanel Grid.Column="1" Margin="10">
+            <TextBlock Text="Plán dne" FontSize="20" FontWeight="Bold" Margin="0,0,0,10" />
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                <TextBox x:Name="TimeTextBox" Width="100" VerticalContentAlignment="Center" />
+                <TextBox x:Name="ActivityTextBox" Width="200" VerticalContentAlignment="Center" />
+            </StackPanel>
+            <Button Content="Přidat do plánu" Width="120" HorizontalAlignment="Left" />
+            <ListBox x:Name="DailyPlanList" BorderBrush="#ccc" BorderThickness="1" Margin="0,10,0,0">
+                <ListBoxItem Content="09:00 - Ranní porada" />
+                <ListBoxItem Content="11:30 - Oběd" />
+            </ListBox>
+        </StackPanel>
+    </Grid>
+</Window>
